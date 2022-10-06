@@ -1,23 +1,31 @@
 #!/bin/bash
-#My first challenge script for this class
+#Doing challenge script for my Lab 2
+#Collecting information about my system in a more specific way
 
-#This script displays the important identity information about the system
+#Creating variables for this script
 
+#varibale for finding fully qualified domain name of the system
+fqdn=$(echo -n "FQDN: " ; hostname --fqdn)
 
-#This is the fully-qualified domain name for this system
-echo FQDN
-hostname --fqdn
+#variable for getting the operating system's name and version
+osversion=$(echo -n "OS-Version: " ; source /etc/os-release ; echo $NAME $VERSION)
 
-#This is the OS name and version of the Linux distro in use
-echo System Information
-hostnamectl
+#variable to know the ip address being used by computer
+ipaddress=$(echo -n "Primary Ip Address: " ; hostname -I)
 
-#This is the primary ip address my machine is using
-echo Primary IP address
-ip a s ens33 | grep -w inet | awk '{print$2}'
+#variable to find the free available space for root file system
+rootfreespace=$(echo -n "Available space for root file system: " ; df -h / | grep -v Avail | awk '{print$4}')
+ 
 
-#This is the space available for my root filesystem
-echo Available space for root filesystem
-df -h /dev/sda3 | awk '{print$4}'
+ #This is what I am expecting from my script
+ 
+cat <<EOF
+Report for my $HOSTNAME
+=======================
+$fqdn
+$osversion
+$ipaddress
+$rootfreespace
+=======================
 
-exit
+EOF
